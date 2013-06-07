@@ -19,6 +19,12 @@
     var matchingClassNames = el.className.match(regExp) || [];
     return matchingClassNames[matchingClassNames.length - 1] === cssClass;
   }
+  function checkClass(el, regExp) {
+    if (!el.className) {
+        return false;
+    }
+    return (typeof(el.className.match(regExp)) != 'undefined');
+  }
 
   function addClass(el, cssClass, regExp) {
     if (el.className) {
@@ -162,6 +168,11 @@
       var cssClassMatch;
       while (node) {
         cssClassMatch = this.cssClass ? hasClass(node, this.cssClass, this.similarClassRegExp) : true;
+        if(this.cssClass.match(/^wysiwyg-color-[a-z]+/)) {
+          if(cssClassMatch == false && checkClass(node, /wysiwyg-color-[a-z]+/g)) {
+            return false;
+          }
+        }
         if (node.nodeType == wysihtml5.ELEMENT_NODE && rangy.dom.arrayContains(this.tagNames, node.tagName.toLowerCase()) && cssClassMatch) {
           return node;
         }
